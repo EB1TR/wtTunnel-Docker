@@ -6,4 +6,8 @@ docker build -t wttunnel .
 
 ## Run
 
-docker run -d -name wtTunnel -p 7023:23 -e user=myuser -e pass=mypass wttunnel
+docker run -d --restart always --name wtTunnel -p 7023:23 -e user=myuser -e pass=mypass wttunnel
+
+## See Log
+
+docker exec -it wtTunnel tail -f /wtTunnelSrv.log.txt
