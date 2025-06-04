@@ -1,0 +1,14 @@
+services:
+  wttunnel:
+    container_name: wttunnel
+    restart: unless-stopped
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    env_file:
+      - produccion.env
+    ports:
+      - "7023:23"
+    logging:
+      options:
+        max-size: "10m"
