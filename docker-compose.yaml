@@ -1,14 +1,48 @@
 services:
-  wttunnel:
-    container_name: wttunnel
+
+  haproxy:
+    image: haproxy:3.2.0-alpine
+    container_name: haproxy
+    restart: unless-stopped
+    networks:
+      - wttunnel-net
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    ports:
+      - "7023:7023"
+      - "8404:8404"
+    logging:
+      options:
+        max-size: "10m"
+
+  wttunnel-a:
+    container_name: wttunnel-a
+    networks:
+      - wttunnel-net
     restart: unless-stopped
     build:
       context: ./
       dockerfile: Dockerfile
     env_file:
       - produccion.env
-    ports:
-      - "7023:23"
     logging:
       options:
         max-size: "10m"
+
+  wttunnel-b:
+    container_name: wttunnel-b
+    networks:
+      - wttunnel-net
+    restart: unless-stopped
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    env_file:
+      - produccion.env
+    logging:
+      options:
+        max-size: "10m"
+
+networks:
+  wttunnel-net:
+    driver: bridge
